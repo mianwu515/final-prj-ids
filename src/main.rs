@@ -80,7 +80,7 @@ async fn main() -> std::io::Result<()> {
             //.service(fs::Files::new("/", "./static").index_file("ui/index.html"))
             .service(Files::new("/static", "ui").index_file("index.html"))
     })
-    .bind("0.0.0.0:8080")?
+    .bind("0.0.0.0:8000")?
     .run()
     .await
 }
