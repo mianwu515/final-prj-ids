@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sample 01 - Login
 
 The purpose of this article is to demonstrate how simple it is to set up and use the new Single Page Application SDK, and authenticate a user in your application using Auth0's Universal Login Page.
@@ -66,3 +67,11 @@ If you have found a bug or if you have a feature request, please report them at 
 ## License
 
 This project is licensed under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
+=======
+# rust-new-project-template
+A good starting point for a new Rust project
+
+## References
+
+* [rust-cli-template](https://github.com/kbknapp/rust-cli-template)
+>>>>>>> origin/main
