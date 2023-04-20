@@ -5,7 +5,7 @@
 - Extract keywords from a text
 
 ![white cat](whitecat.png)
-![a piece of pizza in the sky](skypizza.png)
+![a piece of pizza in the sky](sky-pizza.png)
 
 ```
 Summarize this for a second-grade student:
