@@ -95,6 +95,7 @@
           <button class="tablinks" id="image-tab">Image Generation</button>
           <button class="tablinks" id="summary-tab">Summarization</button>
           <button class="tablinks" id="keywords-tab">Keywords</button>
+          <button class="tablinks" id="sentiment-tab">Sentiment Analysis</button>
         </div>
   
         <div id="image-page" class="tabcontent">
@@ -127,6 +128,16 @@
             <input type="submit" value="Keywords">
           </form>
           <div id="keywords-output"></div>
+        </div>
+
+        <div id="sentiment-page" class="tabcontent">
+          <h1>Sentiment Analysis Service</h1>
+          <form id="sentiment-form">
+            <label for="text-input">Enter text:</label><br>
+            <textarea id="text-input" name="text"></textarea>
+            <input type="submit" value="Perform sentiment analysis">
+          </form>
+          <div id="sentiment-output"></div>
         </div>
     
         <script>
@@ -170,6 +181,26 @@
         summaryOutput.innerText = data.summary;
       });
 
+      // Add event listener for sentiment-form
+      const sentimentForm = document.getElementById('sentiment-form');
+      const sentimentOutput = document.getElementById('sentiment-output');
+
+      sentimentForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const response = await fetch('/sentiment', {
+          method: 'POST',
+          body: JSON.stringify({
+            text: formData.get('text')
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        sentimentOutput.innerText = data.sentiment;
+      });
+
       // Add event listener for keywords-form
       const keywordsForm = document.getElementById('keywords-form');
       const keywordsOutput = document.getElementById('keywords-output');
@@ -211,6 +242,7 @@
       document.getElementById('image-tab').addEventListener('click', (event) => openTab(event, 'image-page'));
       document.getElementById('summary-tab').addEventListener('click', (event) => openTab(event, 'summary-page'));
       document.getElementById('keywords-tab').addEventListener('click', (event) => openTab(event, 'keywords-page'));
+      document.getElementById('sentiment-tab').addEventListener('click', (event) => openTab(event, 'sentiment-page'));
       document.getElementById('image-tab').click(); // Set the first tab as active by default
 
     </script>

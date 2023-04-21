@@ -41,6 +41,16 @@ struct KeywordsResponse {
 }
 
 // structures.. 
+// Sentiment Analysis
+#[derive(Debug, Serialize, Deserialize)]
+struct SentimentRequest {
+    text: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct SentimentResponse {
+    sentiment: String,
+}
 
 #[get("/")]
 async fn index() -> impl Responder {
@@ -49,6 +59,104 @@ async fn index() -> impl Responder {
     file.read_to_string(&mut contents).unwrap();
     HttpResponse::Ok().content_type("text/html").body(contents)
 }
+
+#[post("/sentiment")]
+async fn analyze_sentiment(info: web::Json<SentimentRequest>) -> impl Responder {
+    let api_key = env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY must be set");
+    let url = "https://api.openai.com/v1/engines/text-davinci-003/completions";
+    let prompt = format!("Perform sentiment analysis from the following text:\n\n{}", info.text);
+    let payload = json!({
+        "prompt": prompt,
+        "temperature": 0.5,
+        "max_tokens": 60,
+        "top_p": 1.0,
+        "frequency_penalty": 0.8,
+        "presence_penalty": 0.0
+    });
+
+    let client = reqwest::Client::new();
+    let res = client.post(url)
+        .header(header::AUTHORIZATION, format!("Bearer {}", api_key))
+        .header(header::CONTENT_TYPE, "application/json")
+        .json(&payload)
+        .send()
+        .await;
+
+    match res {
+        Ok(r) => {
+            match r.json::<serde_json::Value>().await {
+                Ok(result) => {
+                    println!("Result JSON: {:?}", result);
+                    if let Some(sentiment) = result["choices"][0]["text"].as_str() {
+                        let sentiment = sentiment.to_owned();
+                        let label = extract_sentiment_label(&sentiment);
+                        let response = SentimentResponse { sentiment: label };
+                        HttpResponse::Ok().json(response)
+                    } else {
+                        HttpResponse::InternalServerError().body("Error: Unable to perform sentiment analysis")
+                    }
+                }
+                Err(e) => HttpResponse::InternalServerError().body(format!("Error parsing JSON: {:?}", e)),
+            }
+        }
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {:?}", e)),
+    }
+}
+
+fn extract_sentiment_label(sentiment: &str) -> String {
+    if sentiment.contains("Positive") || sentiment.contains("positive") {
+        "Positive".to_owned()
+    } else if sentiment.contains("Negative") || sentiment.contains("negative") {
+        "Negative".to_owned()
+    } else {
+        "Neutral".to_owned()
+    }
+}
+
+
+// // post request for sentiment analysis
+// #[post("/sentiment")]
+// async fn analyze_sentiment(info: web::Json<SentimentRequest>) -> impl Responder {
+//     let api_key = env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY must be set");
+//     let url = "https://api.openai.com/v1/engines/text-davinci-003/completions";
+//     let prompt = format!("Perform sentiment analysis from the following text:\n\n{}", info.text);
+//     let payload = json!({
+//         "prompt": prompt,
+//         "temperature": 0.5,
+//         "max_tokens": 60,
+//         "top_p": 1.0,
+//         "frequency_penalty": 0.8,
+//         "presence_penalty": 0.0
+//     });
+
+//     let client = reqwest::Client::new();
+//     let res = client.post(url)
+//         .header(header::AUTHORIZATION, format!("Bearer {}", api_key))
+//         .header(header::CONTENT_TYPE, "application/json")
+//         .json(&payload)
+//         .send()
+//         .await;
+
+//         match res {
+//             Ok(r) => {
+//                 match r.json::<serde_json::Value>().await {
+//                     Ok(result) => {
+//                         println!("Result JSON: {:?}", result);
+//                         if let Some(sentiment) = result["choices"][0]["text"].as_str() {
+//                             let sentiment = sentiment.to_owned();
+//                             let response = SentimentResponse { sentiment };
+//                             HttpResponse::Ok().json(response)
+//                         } else {
+//                             HttpResponse::InternalServerError().body("Error: Unable to perform sentiment analysis")
+//                         }
+//                     }
+//                     Err(e) => HttpResponse::InternalServerError().body(format!("Error parsing JSON: {:?}", e)),
+//                 }
+//             }
+//             Err(e) => HttpResponse::InternalServerError().body(format!("Error: {:?}", e)),
+//         }
+
+// }
 
 #[post("/generate-image")]
 async fn generate_image(info: web::Json<ImageRequest>) -> impl Responder {
@@ -185,6 +293,7 @@ async fn main() -> std::io::Result<()> {
             .service(generate_image)
             .service(summarize)
             .service(extract_keywords)
+            .service(analyze_sentiment)
             .service(Files::new("/static", "ui").index_file("index.html"))
     })
     .bind("0.0.0.0:8000")?
