@@ -114,49 +114,6 @@ fn extract_sentiment_label(sentiment: &str) -> String {
 }
 
 
-// // post request for sentiment analysis
-// #[post("/sentiment")]
-// async fn analyze_sentiment(info: web::Json<SentimentRequest>) -> impl Responder {
-//     let api_key = env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY must be set");
-//     let url = "https://api.openai.com/v1/engines/text-davinci-003/completions";
-//     let prompt = format!("Perform sentiment analysis from the following text:\n\n{}", info.text);
-//     let payload = json!({
-//         "prompt": prompt,
-//         "temperature": 0.5,
-//         "max_tokens": 60,
-//         "top_p": 1.0,
-//         "frequency_penalty": 0.8,
-//         "presence_penalty": 0.0
-//     });
-
-//     let client = reqwest::Client::new();
-//     let res = client.post(url)
-//         .header(header::AUTHORIZATION, format!("Bearer {}", api_key))
-//         .header(header::CONTENT_TYPE, "application/json")
-//         .json(&payload)
-//         .send()
-//         .await;
-
-//         match res {
-//             Ok(r) => {
-//                 match r.json::<serde_json::Value>().await {
-//                     Ok(result) => {
-//                         println!("Result JSON: {:?}", result);
-//                         if let Some(sentiment) = result["choices"][0]["text"].as_str() {
-//                             let sentiment = sentiment.to_owned();
-//                             let response = SentimentResponse { sentiment };
-//                             HttpResponse::Ok().json(response)
-//                         } else {
-//                             HttpResponse::InternalServerError().body("Error: Unable to perform sentiment analysis")
-//                         }
-//                     }
-//                     Err(e) => HttpResponse::InternalServerError().body(format!("Error parsing JSON: {:?}", e)),
-//                 }
-//             }
-//             Err(e) => HttpResponse::InternalServerError().body(format!("Error: {:?}", e)),
-//         }
-
-// }
 
 #[post("/generate-image")]
 async fn generate_image(info: web::Json<ImageRequest>) -> impl Responder {
