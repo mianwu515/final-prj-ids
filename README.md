@@ -64,5 +64,5 @@ docker build --no-cache  -t ai-services .
 ```
 
 ### References:
-- [summarize-openai-prj](https://github.com/nogibjj/rust-world-spr23/tree/main/summarize-openai-prj4)
+- [summarize-openai-prj-example](https://github.com/nogibjj/rust-world-spr23/tree/main/summarize-openai-prj4)
 - [openai-examples](https://platform.openai.com/examples)
