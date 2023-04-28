@@ -1,5 +1,7 @@
 # AI Services
 
+[Link to the AI-Services](https://38prjqcpnq.us-east-1.awsapprunner.com/)
+
 - Image Generation based on a prompt
 - Summary for a second-grade student
 - Extract keywords from a text
@@ -45,7 +47,7 @@ Strategies to boost optimism: take negativity breaks and reframe with positive s
 
 3. Add the environment variable in the "Environment" section:
 
-If using the AWS App Runner console, find the "Environment variables" section, and click "Add environment variable". Set the "Name" as OPENAI_API_KEY and the "Value" as the actual API key value.
+If using the AWS App Runner console, find the "Environment variables" section, and click "Add environment variable". Set the "Name" as `OPENAI_API_KEY` and the "Value" as the actual API key value.
 
 By setting the `OPENAI_API_KEY` environment variable using AWS App Runner environment settings, you ensure the API key is securely stored and available to the application during runtime without being exposed in the Docker image.
 
