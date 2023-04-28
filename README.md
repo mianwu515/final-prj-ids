@@ -37,7 +37,7 @@ Strategies to boost optimism: take negativity breaks and reframe with positive s
 ![sentiment](sentiment.png)
 
 
-### Follow these steps:
+### Follow these steps to deploy the service:
 
 1. Build and push your Docker image to Amazon ECR.
 
@@ -47,7 +47,7 @@ Strategies to boost optimism: take negativity breaks and reframe with positive s
 
 If using the AWS App Runner console, find the "Environment variables" section, and click "Add environment variable". Set the "Name" as OPENAI_API_KEY and the "Value" as the actual API key value.
 
-By setting the OPENAI_API_KEY environment variable using AWS App Runner environment settings, you ensure the API key is securely stored and available to the application during runtime without being exposed in the Docker image.
+By setting the `OPENAI_API_KEY` environment variable using AWS App Runner environment settings, you ensure the API key is securely stored and available to the application during runtime without being exposed in the Docker image.
 
 4. Refer to "Application logs" section in the AWS App Runner console for troubleshooting
 
