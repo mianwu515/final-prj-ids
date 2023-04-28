@@ -36,6 +36,31 @@ Strategies to boost optimism: take negativity breaks and reframe with positive s
 
 ![sentiment](sentiment.png)
 
+
+### Follow these steps:
+
+1. Build and push your Docker image to Amazon ECR.
+
+2. In the AWS App Runner console, create a new service or update an existing one.
+
+3. Add the environment variable in the "Environment" section:
+
+If using the AWS App Runner console, find the "Environment variables" section, and click "Add environment variable". Set the "Name" as OPENAI_API_KEY and the "Value" as the actual API key value.
+
+By setting the OPENAI_API_KEY environment variable using AWS App Runner environment settings, you ensure the API key is securely stored and available to the application during runtime without being exposed in the Docker image.
+
+4. Refer to "Application logs" section in the AWS App Runner console for troubleshooting
+
+### Note:
+- Dockerfile
+    1. Remember to copy the 'ui' directory from the builder stage to the runtime image  
+
+- Docker rebuild
+    1. Use the "--no-cache" option to rebuild the service
+```bash
+docker build --no-cache  -t ai-services .
+```
+
 ### References:
 - [summarize-openai-prj](https://github.com/nogibjj/rust-world-spr23/tree/main/summarize-openai-prj4)
 - [openai-examples](https://platform.openai.com/examples)

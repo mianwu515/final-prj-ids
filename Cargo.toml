@@ -1,5 +1,5 @@
 [package]
-name = "summarize-openai"
+name = "ai-services"
 version = "0.1.0"
 edition = "2021"
 
