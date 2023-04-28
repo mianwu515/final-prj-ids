@@ -24,6 +24,10 @@ const login = async (targetUrl) => {
   }
 };
 
+const chat = () => {
+  window.location.href = "https://duke.edu";
+};
+
 /**
  * Executes the logout flow
  */
